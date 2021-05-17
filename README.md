@@ -1,26 +1,21 @@
-# telescope-vimspector.nvim
+# package-json-scripts.nvim
 
-Integration for [vimspector](https://github.com/puremourning/vimspector) with
+Integration for accessing package.json scripts in
 [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)
 
-# Demo
-
-![Demo](./demo.gif)
 
 # Installation
 
-```viml
-Plug 'puremourning/vimspector'
-
-Plug 'nvim-lua/popup.nvim'
-Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim'
-Plug 'nvim-telescope/telescope-vimspector.nvim'
+```lua
+use {'nvim-lua/popup.nvim'}
+use {'nvim-lua/plenary.nvim'}
+use {'nvim-telescope/telescope.nvim'}
+use {'voldikss/vim-floaterm'}
+use {'kishikaisei/telescope-js-package-scripts.nvim}
 ```
 
 # Usage
 
 ```lua
--- Fuzzy find over vimspector configurations
-require('telescope').extensions.vimspector.configurations()
+require('telescope').extensions.packagescript.scripts()
 ```
