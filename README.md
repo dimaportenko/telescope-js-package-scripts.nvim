@@ -19,3 +19,6 @@ use {'kishikaisei/telescope-js-package-scripts.nvim}
 ```lua
 require('telescope').extensions.packagescript.scripts()
 ```
+
+# Credits
+Using the lua json parser from [rxi/json.lua](https://github.com/rxi/json.lua)
