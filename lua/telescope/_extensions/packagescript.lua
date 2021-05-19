@@ -1,5 +1,3 @@
-local json = require "json"
-
 local actions = require('telescope.actions')
 local finders = require('telescope.finders')
 local pickers = require('telescope.pickers')
@@ -19,7 +17,7 @@ return require('telescope').register_extension {
             local jsonString = file:read "*a"
             file:close()
 
-            local scriptsFromJson = json.decode(jsonString)['scripts']
+            local scriptsFromJson = vim.fn.json_decode(jsonString)['scripts']
 
             local scriptsNames = {}
             local scripts      = {}
