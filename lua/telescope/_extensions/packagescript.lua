@@ -1,4 +1,5 @@
 local actions = require('telescope.actions')
+local state = require('telescope.actions.state')
 local finders = require('telescope.finders')
 local pickers = require('telescope.pickers')
 local sorters = require('telescope.sorters')
@@ -35,7 +36,7 @@ return require('telescope').register_extension {
                 sorter = sorters.get_generic_fuzzy_sorter(),
                 attach_mappings = function(prompt_bufnr, map)
                     local execute_script = function()
-                        local selection = actions.state.get_selected_entry(prompt_bufnr)
+                        local selection = state.get_selected_entry(prompt_bufnr)
                         actions.close(prompt_bufnr)
                         local command = 'Terminal:new({ cmd = "' .. scriptsFromJson[selection.value] .. '", hidden = true }):toggle()'
                         vim.cmd(command)
