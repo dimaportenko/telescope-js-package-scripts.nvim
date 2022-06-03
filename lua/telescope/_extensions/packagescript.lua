@@ -3,7 +3,6 @@ local state = require('telescope.actions.state')
 local finders = require('telescope.finders')
 local pickers = require('telescope.pickers')
 local sorters = require('telescope.sorters')
-local Terminal = require("toggleterm.terminal").Terminal
 
 return require('telescope').register_extension {
     exports = {
@@ -38,7 +37,7 @@ return require('telescope').register_extension {
                     local execute_script = function()
                         local selection = state.get_selected_entry(prompt_bufnr)
                         actions.close(prompt_bufnr)
-                        local command = 'Terminal:new({ cmd = "' .. scriptsFromJson[selection.value] .. '", hidden = true }):toggle()'
+                        local command = 'require("toggleterm.terminal").Terminal:new({ cmd = "' .. scriptsFromJson[selection.value] .. '", hidden = true }):toggle()'
                         vim.cmd(command)
                     end
 
