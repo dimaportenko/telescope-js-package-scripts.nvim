@@ -2,6 +2,7 @@ local actions = require('telescope.actions')
 local finders = require('telescope.finders')
 local pickers = require('telescope.pickers')
 local sorters = require('telescope.sorters')
+local Terminal = require("toggleterm.terminal").Terminal
 
 return require('telescope').register_extension {
     exports = {
@@ -34,9 +35,9 @@ return require('telescope').register_extension {
                 sorter = sorters.get_generic_fuzzy_sorter(),
                 attach_mappings = function(prompt_bufnr, map)
                     local execute_script = function()
-                        local selection = actions.get_selected_entry(prompt_bufnr)
+                        local selection = actions.state.get_selected_entry(prompt_bufnr)
                         actions.close(prompt_bufnr)
-                        local command = 'FloatermNew!' .. scriptsFromJson[selection.value]
+                        local command = 'Terminal:new({ cmd = "' .. scriptsFromJson[selection.value] .. '", hidden = true }):toggle()'
                         vim.cmd(command)
                     end
 
@@ -49,3 +50,4 @@ return require('telescope').register_extension {
         end
     }
 }
+
