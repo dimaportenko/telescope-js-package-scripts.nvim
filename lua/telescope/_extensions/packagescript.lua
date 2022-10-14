@@ -40,7 +40,8 @@ return require('telescope').register_extension {
             actions.close(prompt_bufnr)
 
             local cmdTerm = Terminal:new({
-              cmd = scriptsFromJson[selection.value],
+              -- cmd = 'yarn ' .. scriptsFromJson[selection.value],
+              cmd = 'yarn ' .. selection.value,
               hidden = true,
               close_on_exit = false,
               -- on_open = fun(t: Terminal), -- function to run when the terminal opens
@@ -52,6 +53,7 @@ return require('telescope').register_extension {
 
             cmdTerm:toggle()
             -- print(vim.inspect(scriptsFromJson[selection.value]))
+            -- print(vim.inspect(selection.value))
           end
 
           map('i', '<CR>', execute_script)
