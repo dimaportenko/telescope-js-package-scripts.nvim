@@ -16,13 +16,13 @@ return require('telescope').register_extension {
       if file == nil then
         error("Package.json could not be found")
       end
+
       local jsonString = file:read "*a"
       file:close()
 
       local scriptsFromJson = vim.fn.json_decode(jsonString)['scripts']
-
-      local scriptsNames = {}
-      local scripts      = {}
+      local scriptsNames    = {}
+      local scripts         = {}
       for name, code in pairs(scriptsFromJson) do
         table.insert(scriptsNames, name)
         table.insert(scripts, code)
@@ -38,7 +38,20 @@ return require('telescope').register_extension {
           local execute_script = function()
             local selection = state.get_selected_entry(prompt_bufnr)
             actions.close(prompt_bufnr)
-            Terminal:new({ cmd = "' .. scriptsFromJson[selection.value] .. '", hidden = true }):toggle()
+
+            local cmdTerm = Terminal:new({
+              cmd = scriptsFromJson[selection.value],
+              hidden = true,
+              close_on_exit = false,
+              -- on_open = fun(t: Terminal), -- function to run when the terminal opens
+              -- on_close = fun(t: Terminal), -- function to run when the terminal closes
+              -- on_stdout = fun(t: Terminal, job: number, data: string[], name: string) -- callback for processing output on stdout
+              -- on_stderr = fun(t: Terminal, job: number, data: string[], name: string) -- callback for processing output on stderr
+              -- on_exit = fun(t: Terminal, job: number, exit_code: number, name: string) -- function to run when terminal process exits
+            })
+
+            cmdTerm:toggle()
+            -- print(vim.inspect(scriptsFromJson[selection.value]))
           end
 
           map('i', '<CR>', execute_script)
