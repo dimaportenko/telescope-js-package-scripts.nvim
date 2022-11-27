@@ -3,6 +3,7 @@ local state = require('telescope.actions.state')
 local finders = require('telescope.finders')
 local pickers = require('telescope.pickers')
 local sorters = require('telescope.sorters')
+local previewers = require("telescope.previewers")
 local Terminal = require("toggleterm.terminal").Terminal
 
 return require('telescope').register_extension {
@@ -22,18 +23,48 @@ return require('telescope').register_extension {
 
       local scriptsFromJson = vim.fn.json_decode(jsonString)['scripts']
       local scriptsNames    = {}
-      local scripts         = {}
+      -- local scripts         = {}
       for name, code in pairs(scriptsFromJson) do
-        table.insert(scriptsNames, name)
-        table.insert(scripts, code)
+        table.insert(scriptsNames, { name, code })
+        -- table.insert(scripts, code)
       end
 
       pickers.new(opts, {
-        prompt_title = 'Scripts',
+        prompt_title = 'Search',
+        results_title = 'Scripts',
+        layout_strategy = "horizontal",
+        layout_config = {
+          width = 0.4,
+          height = 0.4,
+          preview_width = 0.6,
+        },
         finder = finders.new_table {
-          results = scriptsNames
+          results = scriptsNames,
+          entry_maker = function(entry)
+            return {
+              value = entry[1],
+              ordinal = entry[1],
+              display = entry[1],
+              code = entry[2]
+            }
+          end,
         },
         sorter = sorters.get_generic_fuzzy_sorter(),
+
+        previewer = previewers.new_buffer_previewer {
+          title = "Preview",
+          get_buffer_by_name = function(_, entry)
+            return entry.value
+          end,
+          define_preview = function(self, entry, _)
+            pcall(vim.api.nvim_buf_set_lines, self.state.bufnr, 0, -1, false, { entry.code })
+          end,
+          -- add teardown
+          teardown = function()
+            -- print("teardown")
+          end
+        },
+
         attach_mappings = function(prompt_bufnr, map)
           local execute_script = function()
             local selection = state.get_selected_entry(prompt_bufnr)
