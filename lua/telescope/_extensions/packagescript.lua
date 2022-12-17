@@ -29,41 +29,52 @@ return require('telescope').register_extension {
         -- table.insert(scripts, code)
       end
 
+      -- find the length of the longest script name
+      local longestScriptName = 0
+      for _, script in ipairs(scriptsNames) do
+        if #script[1] > longestScriptName then
+          longestScriptName = #script[1]
+        end
+      end
+
       pickers.new(opts, {
         prompt_title = 'Search',
         results_title = 'Scripts',
         layout_strategy = "horizontal",
         layout_config = {
-          width = 0.4,
+          width = 0.8,
           height = 0.4,
           preview_width = 0.6,
         },
         finder = finders.new_table {
           results = scriptsNames,
           entry_maker = function(entry)
+            -- fill string with spaces to make it the same length as the longest script name
+            local spaces = string.rep(" ", longestScriptName - #entry[1])
+            local display = entry[1] .. spaces .. "  ||  " .. entry[2]
             return {
               value = entry[1],
               ordinal = entry[1],
-              display = entry[1],
+              display = display,
               code = entry[2]
             }
           end,
         },
         sorter = sorters.get_generic_fuzzy_sorter(),
 
-        previewer = previewers.new_buffer_previewer {
-          title = "Preview",
-          get_buffer_by_name = function(_, entry)
-            return entry.value
-          end,
-          define_preview = function(self, entry, _)
-            pcall(vim.api.nvim_buf_set_lines, self.state.bufnr, 0, -1, false, { entry.code })
-          end,
-          -- add teardown
-          teardown = function()
-            -- print("teardown")
-          end
-        },
+        -- previewer = previewers.new_buffer_previewer {
+        --   title = "Preview",
+        --   get_buffer_by_name = function(_, entry)
+        --     return entry.value
+        --   end,
+        --   define_preview = function(self, entry, _)
+        --     pcall(vim.api.nvim_buf_set_lines, self.state.bufnr, 0, -1, false, { entry.code })
+        --   end,
+        --   -- add teardown
+        --   teardown = function()
+        --     -- print("teardown")
+        --   end
+        -- },
 
         attach_mappings = function(prompt_bufnr, map)
           local execute_script = function()
