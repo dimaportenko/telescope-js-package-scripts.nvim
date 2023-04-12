@@ -61,7 +61,7 @@ M.scripts = function(opts)
 
       attach_mappings = function(prompt_bufnr, map)
         local execute_script = function()
-          local selection = state.get_selected_entry(prompt_bufnr)
+          local selection = state.get_selected_entry()
           actions.close(prompt_bufnr)
 
           local cmdTerm = Terminal:new({
