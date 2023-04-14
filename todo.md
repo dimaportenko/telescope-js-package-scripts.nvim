@@ -2,4 +2,5 @@
 
 - [ ] refactor
 - [ ] setup params (set package manager)
-- [ ] run command with params
+- [x] run command with params
+- [ ] configurable layout config with setup params
